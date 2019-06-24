@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+  php:
+    container_name: php
+    build: ./docker/php
+    volumes:
+      - .:/var/www/php-enum
+    working_dir: /var/www/php-enum
+    command: >
+      bash -c
+        "composer install --optimize-autoloader \
+        && tail -f /dev/null"
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/php-enum
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
