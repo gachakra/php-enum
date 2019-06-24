@@ -16,6 +16,18 @@ use DomainException;
 use Gachakra\PhpEnum\Enum;
 
 /**
+ * it could be odd that destinations get weight and create postage with it.
+ * just a simple simple example.
+ *
+ * Interface Destination
+ * @package Gachakra\PhpEnum\Examples\Strategies
+ */
+interface Destination {
+
+    public function postage(Weight $weight): Postage;
+}
+
+/**
  * @method static static AFRICA()
  * @method static static ASIA()
  * @method static static EUROPE()
@@ -24,7 +36,7 @@ use Gachakra\PhpEnum\Enum;
  * @method static static ANTARCTICA()
  * @method static static AUSTRALIA()
  */
-final class Destination extends Enum {
+final class AirmailDestination extends Enum implements Destination {
 
     private const AFRICA = 'Africa';
     private const ASIA = 'Asia';
@@ -35,23 +47,23 @@ final class Destination extends Enum {
     private const AUSTRALIA = 'Australia';
 
     /**
-     * it could be odd that destinations get weight and create postage with it
-     * just a simple simple example
-     *
      * @param Weight $weight
      * @return AirmailPostage
      */
-    public function airmailPostage(Weight $weight): AirmailPostage {
+    public function postage(Weight $weight): Postage {
         switch ($this) {
             case self::ASIA():
                 return LowestAirmailPostage::fromWeight($weight);
+
             case self::EUROPE():
             case self::NORTH_AMERICA():
             case self::AUSTRALIA():
                 return MiddleAirmailPostage::fromWeight($weight);
+
             case self::AFRICA():
             case self::SOUTH_AMERICA():
                 return HighestAirmailPostage::fromWeight($weight);
+
             default:
                 throw new DomainException("Airmail unsupported for $this");
         }
@@ -161,9 +173,9 @@ class HighestAirmailPostage extends AirmailPostage {
 
 
 {
-    $postage = Destination::AFRICA()->airmailPostage(Weight::UP_TO_50_GRAMS())
-            ->add(Destination::ASIA()->airmailPostage(Weight::UP_TO_25_GRAMS()))
-            ->add(Destination::EUROPE()->airmailPostage(Weight::UP_TO_50_GRAMS()));
+    $postage = AirmailDestination::AFRICA()->postage(Weight::UP_TO_50_GRAMS())
+            ->add(AirmailDestination::ASIA()->postage(Weight::UP_TO_25_GRAMS()))
+            ->add(AirmailDestination::EUROPE()->postage(Weight::UP_TO_50_GRAMS()));
 
     assert($postage->rates() === 510);
 }
