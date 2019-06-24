@@ -2,6 +2,7 @@ vendor/
 node_modules/
 npm-debug.log
 
+
 # Laravel 4 specific
 bootstrap/compiled.php
 app/storage/
@@ -18,3 +19,19 @@ Homestead.json
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
+
+# IntelliJ project files
+*.iml
+*.iws
+*.ipr
+.idea/
+
+#VS code
+.vscode/
+
+# OS
+.DS_Store
+
+
+# Docker
+!docker/**/.env
