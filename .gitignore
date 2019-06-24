@@ -2,6 +2,7 @@ vendor/
 node_modules/
 npm-debug.log
 
+
 # Laravel 4 specific
 bootstrap/compiled.php
 app/storage/
@@ -30,3 +31,7 @@ Homestead.json
 
 # OS
 .DS_Store
+
+
+# Docker
+!docker/**/.env
