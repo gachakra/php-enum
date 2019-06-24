@@ -29,13 +29,14 @@ use RuntimeException;
  *
  * CONTRACT
  * - only `scalar` and `null` value allowed as Enum subclass const value (`array` not allowed)
- * - duplicated consts values are not allowed in an Enum
- * - all the consts values must be the same type
+ * - duplicated consts' values are not allowed in an Enum
+ * - all the consts' values must be the same type
  *
  * RECOMMENDATION
- * - subclass must have the constructor whose first parameter is scalar type
+ * - make the first parameter the same type as consts' value when subclass has the constructor
  * - declare `final` in subclass
- * - make subclass's consts and constructor `protected` or `private`
+ * - make subclass's consts `protected` or `private`
+ * - make subclass's constructor `protected`
  *
  * COMPARISON
  * - use @see Enum::equals() to compare 2 Enums to avoid mistaking like using `===` in code
@@ -45,21 +46,35 @@ use RuntimeException;
  */
 abstract class Enum {
 
+    /**
+     * @var static[]
+     */
+    private static $elements = [];
+    /**
+     * @var bool[]|float[]|int[]|string[]
+     */
     private static $constants = [];
-
-    private static $instances = [];
-
+    /**
+     * @var string[]
+     */
     private static $names = [];
-
+    /**
+     * @var bool[]|float[]|int[]|string[]
+     */
     private static $values = [];
 
+    /**
+     * @var string
+     */
     private $name;
-
+    /**
+     * @var bool|float|int|string|null
+     */
     private $scalar;
 
     /**
      * @param string $name
-     * @param $args
+     * @param        $args
      * @return static
      */
     public final static function __callStatic($name, array $args): self {
@@ -146,15 +161,15 @@ abstract class Enum {
     public final static function elements(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
 
-        if (!empty(self::$instances[$enum])) {
-            return self::$instances[$enum];
+        if (!empty(self::$elements[$enum])) {
+            return self::$elements[$enum];
         }
 
         $values = [];
         foreach (static::constants() as $name => $value) {
             $values[$name] = new static($value);
         }
-        return self::$instances[$enum] = $values;
+        return self::$elements[$enum] = $values;
     }
 
     /**
@@ -189,7 +204,8 @@ abstract class Enum {
 
         return empty(self::$names[$enum])
                 ? self::$names[$enum] = array_keys(static::constants())
-                : self::$names[$enum];    }
+                : self::$names[$enum];
+    }
 
     /**
      * [const1_value, const2_value...]
