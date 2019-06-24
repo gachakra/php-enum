@@ -3,7 +3,10 @@ version: '3.5'
 services:
   php:
     container_name: php
-    build: ./docker/php
+    build:
+      context: ./docker/php
+      args:
+        TIMEZONE: Asia/Tokyo
     volumes:
       - .:/var/www/php-enum
     working_dir: /var/www/php-enum
