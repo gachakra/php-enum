@@ -22,9 +22,10 @@ use RuntimeException;
 
 /**
  * DEFINITION
- * - element: Enum instance
- * - name   : const name
- * - value  : const value
+ * - element  : Enum instance
+ * - constant : const itself
+ * - name     : const name
+ * - value    : const value
  *
  * CONTRACT
  * - only `scalar` and `null` value allowed as Enum subclass const value (`array` not allowed)
@@ -57,7 +58,7 @@ abstract class Enum {
     private $scalar;
 
     /**
-     * @param $name
+     * @param string $name
      * @param $args
      * @return static
      */
@@ -77,7 +78,7 @@ abstract class Enum {
 
     /**
      * Enum constructor.
-     * @param bool|float|int|string $value
+     * @param bool|float|int|string|null $value
      */
     protected function __construct($value) {
         $this->name = self::nameByValue($value);
@@ -107,7 +108,7 @@ abstract class Enum {
     }
 
     /**
-     * @param self $other
+     * @param static $other
      * @return bool
      */
     public final function equals(self $other): bool {
@@ -116,7 +117,7 @@ abstract class Enum {
 
     /**
      * @param string $name
-     * @return Enum
+     * @return static
      */
     public final static function of(string $name): self {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
@@ -129,8 +130,8 @@ abstract class Enum {
     }
 
     /**
-     * @param $value
-     * @return Enum
+     * @param bool|float|int|string|null $value
+     * @return static
      */
     public final static function fromValue($value): self {
         self::checkIfCalledNotViaRootEnum(static::class);
@@ -139,9 +140,7 @@ abstract class Enum {
     }
 
     /**
-     * ex:
-     * ["CONST_NAME" => $ENUM_INSTANCE]
-     *
+     * [const1_name => enum_instance_of_const1, const2_name => enum_instance_of_const2...]
      * @return static[]
      */
     public final static function elements(): array {
@@ -159,10 +158,8 @@ abstract class Enum {
     }
 
     /**
-     * ex:
-     * ["CONST_NAME" => $scalar]
-     *
-     * @return array
+     * [const1_name => const1_value, const2_name => const2_value...]
+     * @return bool[]|float[]|int[]|string[]
      */
     public final static function constants(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
@@ -184,7 +181,8 @@ abstract class Enum {
     }
 
     /**
-     * @return array
+     * [const1_name, const2_name...]
+     * @return string[]
      */
     public final static function names(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
@@ -194,10 +192,8 @@ abstract class Enum {
                 : self::$names[$enum];    }
 
     /**
-     * ex:
-     * [$scalar]
-     *
-     * @return array|$scalar[]
+     * [const1_value, const2_value...]
+     * @return bool[]|float[]|int[]|string[]
      */
     public final static function values(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
@@ -216,7 +212,7 @@ abstract class Enum {
     }
 
     /**
-     * @param $value
+     * @param bool|float|int|string|null $value
      * @return string
      */
     private static function nameByValue($value): string {
@@ -242,7 +238,7 @@ abstract class Enum {
     }
 
     /**
-     * @param $value
+     * @param bool|float|int|string|null $value
      */
     private static function checkIfValueIsScalar($value): void {
         if (!(is_null($value) || is_scalar($value))) {
@@ -252,7 +248,7 @@ abstract class Enum {
     }
 
     /**
-     * @param array $constants
+     * @param bool[]|float[]|int[]|string[] $constants
      */
     private static function checkIfValuesNotDuplicated(array $constants): void {
         if (count($constants) !== count(array_unique($constants))) {
@@ -263,7 +259,7 @@ abstract class Enum {
     /**
      * null type allowed
      *
-     * @param array $constants
+     * @param bool[]|float[]|int[]|string[] $constants
      */
     private static function checkIfAllValuesSameType(array $constants): void {
         $previousType = null;
