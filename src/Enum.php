@@ -202,9 +202,8 @@ abstract class Enum {
     public final static function names(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
 
-        return empty(self::$names[$enum])
-                ? self::$names[$enum] = array_keys(static::constants())
-                : self::$names[$enum];
+        return self::$names[$enum]
+                ?? self::$names[$enum] = array_keys(static::constants());
     }
 
     /**
@@ -214,9 +213,8 @@ abstract class Enum {
     public final static function values(): array {
         self::checkIfCalledNotViaRootEnum($enum = static::class);
 
-        return empty(self::$values[$enum])
-                ? self::$values[$enum] = array_values(static::constants())
-                : self::$values[$enum];
+        return self::$values[$enum]
+                ?? self::$values[$enum] = array_values(static::constants());
     }
 
     /**
@@ -286,7 +284,7 @@ abstract class Enum {
                 continue;
             }
 
-            throw new MultipleEnumValueTypeException("All the Enum constants values must be same type");
+            throw new MultipleEnumValueTypeException("All the Enum constants values must be the same type");
         }
     }
 }
