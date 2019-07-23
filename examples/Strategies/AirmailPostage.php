@@ -16,7 +16,7 @@ use DomainException;
 use Gachakra\PhpEnum\Enum;
 
 /**
- * it could be odd that destinations get weight and create postage with it.
+ * it could be odd that destinations get mail and create postage with it.
  * just a simple simple example.
  *
  * Interface Destination
@@ -24,10 +24,32 @@ use Gachakra\PhpEnum\Enum;
  */
 interface Destination {
 
-    public function postage(Weight $weight): Postage;
+    public function postage(Mail $mail): Postage;
+}
+
+interface WeightType {
+
+    public static function fromGrams(int $grams): WeightType;
+}
+
+interface Mail {
+
+    public function weightType(): WeightType;
 }
 
 /**
+ * Interface Postage (from Japan to overseas)
+ */
+interface Postage {
+
+    public function rates(): int;
+
+    public function add(Postage $postage): Postage;
+}
+
+/**
+ * from Japan
+ *
  * @method static static AFRICA()
  * @method static static ASIA()
  * @method static static EUROPE()
@@ -47,22 +69,22 @@ final class AirmailDestination extends Enum implements Destination {
     private const AUSTRALIA = 'Australia';
 
     /**
-     * @param Weight $weight
+     * @param Mail $mail
      * @return AirmailPostage
      */
-    public function postage(Weight $weight): Postage {
+    public function postage(Mail $mail): Postage {
         switch ($this) {
             case self::ASIA():
-                return LowestAirmailPostage::fromWeight($weight);
+                return LowestAirmailPostage::of($mail);
 
             case self::EUROPE():
             case self::NORTH_AMERICA():
             case self::AUSTRALIA():
-                return MiddleAirmailPostage::fromWeight($weight);
+                return MiddleAirmailPostage::of($mail);
 
             case self::AFRICA():
             case self::SOUTH_AMERICA():
-                return HighestAirmailPostage::fromWeight($weight);
+                return HighestAirmailPostage::of($mail);
 
             default:
                 throw new DomainException("Airmail unsupported for $this");
@@ -75,21 +97,48 @@ final class AirmailDestination extends Enum implements Destination {
  * @method static static UP_TO_25_GRAMS()
  * @method static static UP_TO_50_GRAMS()
  */
-final class Weight extends Enum {
+final class AirmailWeightType extends Enum implements WeightType {
 
     private const UP_TO_25_GRAMS = 25;
     private const UP_TO_50_GRAMS = 50;
+
+    public static function fromGrams(int $grams): WeightType {
+        if ($grams <= self::UP_TO_25_GRAMS) {
+            return self::UP_TO_25_GRAMS();
+        }
+        if ($grams <= self::UP_TO_50_GRAMS) {
+            return self::UP_TO_50_GRAMS();
+        }
+        throw new \OutOfRangeException();
+    }
 }
 
-/**
- * Interface Postage (from Japan to overseas)
- */
-interface Postage {
 
-    public function rates(): int;
+class Airmail implements Mail {
 
-    public function add(Postage $postage): Postage;
+    /**
+     * @var int
+     */
+    private $grams;
+    /**
+     * @var WeightType
+     */
+    private $weightType;
+
+    public static function fromGrams(int $grams): self {
+        return new self($grams, AirmailWeightType::fromGrams($grams));
+    }
+
+    private function __construct(int $grams, WeightType $weightType) {
+        $this->grams = $grams;
+        $this->weightType = $weightType;
+    }
+
+    public function weightType(): WeightType {
+        return $this->weightType;
+    }
 }
+
 
 class AirmailPostage implements Postage {
 
@@ -99,6 +148,9 @@ class AirmailPostage implements Postage {
     protected $jpy;
 
     protected function __construct(int $jpy) {
+        if ($jpy < 0) {
+            throw new \OutOfRangeException(); // TODO message
+        }
         $this->jpy = $jpy;
     }
 
@@ -111,25 +163,27 @@ class AirmailPostage implements Postage {
     }
 }
 
+
 trait CalculatePostageByWeight {
 
-    public static function fromWeight(Weight $weight): Postage {
-        return new static(static::calculateBy($weight));
+    public static function of(Mail $mail): Postage {
+        return new static(static::calculateBy($mail->weightType()));
     }
 
-    protected abstract static function calculateBy(Weight $weight): int;
+    protected abstract static function calculateBy(WeightType $weight): int;
 }
+
 
 class LowestAirmailPostage extends AirmailPostage {
 
     use CalculatePostageByWeight;
 
-    protected static function calculateBy(Weight $weight): int {
+    protected static function calculateBy(AirmailWeightType $weight): int {
 
         switch ($weight) {
-            case Weight::UP_TO_25_GRAMS():
+            case AirmailWeightType::UP_TO_25_GRAMS():
                 return 90;
-            case Weight::UP_TO_50_GRAMS():
+            case AirmailWeightType::UP_TO_50_GRAMS():
                 return 160;
             default:
                 throw new DomainException();
@@ -137,16 +191,17 @@ class LowestAirmailPostage extends AirmailPostage {
     }
 }
 
+
 class MiddleAirmailPostage extends AirmailPostage {
 
     use CalculatePostageByWeight;
 
-    protected static function calculateBy(Weight $weight): int {
+    protected static function calculateBy(AirmailWeightType $weight): int {
 
         switch ($weight) {
-            case Weight::UP_TO_25_GRAMS():
+            case AirmailWeightType::UP_TO_25_GRAMS():
                 return 110;
-            case Weight::UP_TO_50_GRAMS():
+            case AirmailWeightType::UP_TO_50_GRAMS():
                 return 190;
             default:
                 throw new DomainException();
@@ -154,16 +209,17 @@ class MiddleAirmailPostage extends AirmailPostage {
     }
 }
 
+
 class HighestAirmailPostage extends AirmailPostage {
 
     use CalculatePostageByWeight;
 
-    protected static function calculateBy(Weight $weight): int {
+    protected static function calculateBy(AirmailWeightType $weight): int {
 
         switch ($weight) {
-            case Weight::UP_TO_25_GRAMS():
+            case AirmailWeightType::UP_TO_25_GRAMS():
                 return 130;
-            case Weight::UP_TO_50_GRAMS():
+            case AirmailWeightType::UP_TO_50_GRAMS():
                 return 230;
             default:
                 throw new DomainException();
@@ -171,11 +227,13 @@ class HighestAirmailPostage extends AirmailPostage {
     }
 }
 
-
+/**
+ * Usage
+ */
 {
-    $postage = AirmailDestination::AFRICA()->postage(Weight::UP_TO_50_GRAMS())
-            ->add(AirmailDestination::ASIA()->postage(Weight::UP_TO_25_GRAMS()))
-            ->add(AirmailDestination::EUROPE()->postage(Weight::UP_TO_50_GRAMS()));
+    $postage = AirmailDestination::AFRICA()->postage(Airmail::fromGrams(48))
+            ->add(AirmailDestination::ASIA()->postage(Airmail::fromGrams(24)))
+            ->add(AirmailDestination::EUROPE()->postage(Airmail::fromGrams(32)));
 
     assert($postage->rates() === 510);
 }
