@@ -234,7 +234,7 @@ abstract class Enum {
 
         $name = array_search($value, static::constants(), true);
         if ($name === false) {
-            $enum = get_called_class();
+            $enum = static::class;
             throw new DomainException("Unknown Enum value in $enum: $value");
         }
         return $name;
@@ -246,7 +246,7 @@ abstract class Enum {
      * @param string $calledEnum
      */
     private static function checkIfCalledNotViaRootEnum(string $calledEnum): void {
-        if ($calledEnum === __CLASS__) {
+        if ($calledEnum === self::class) {
             throw new RootEnumMethodCallException("Cannot call static method directly via root abstract Enum");
         }
     }
