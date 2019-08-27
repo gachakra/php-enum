@@ -20,6 +20,9 @@ RUN apt-get update \
 COPY php.ini /usr/local/etc/php/
 RUN docker-php-ext-install zip pdo_mysql
 
+# set path so that able to run command without `vendor/bin`
+ENV PATH $PATH:./vendor/bin
+
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -35,7 +38,3 @@ RUN composer config -g repos.packagist composer https://packagist.jp \
 
 # Document Root
 RUN mkdir -p /var/www/php-enum
-WORKDIR /var/www/php-enum
-
-
-EXPOSE 80
