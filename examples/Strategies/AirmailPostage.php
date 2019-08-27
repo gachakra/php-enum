@@ -15,6 +15,19 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 use DomainException;
 use Gachakra\PhpEnum\Enum;
 
+
+/**
+ * Usage
+ */
+{
+    $postage = AirmailDestination::AFRICA()->postage(Airmail::fromGrams(48))
+            ->add(AirmailDestination::ASIA()->postage(Airmail::fromGrams(24)))
+            ->add(AirmailDestination::EUROPE()->postage(Airmail::fromGrams(32)));
+
+    assert($postage->rates() === 510);
+}
+
+
 /**
  * it could be odd that destinations get mail and create postage with it.
  * just a simple simple example.
@@ -69,6 +82,8 @@ final class AirmailDestination extends Enum implements Destination {
     private const AUSTRALIA = 'Australia';
 
     /**
+     * or you can use dispatch table instead of switch
+     *
      * @param Mail $mail
      * @return AirmailPostage
      */
@@ -225,15 +240,4 @@ class HighestAirmailPostage extends AirmailPostage {
                 throw new DomainException();
         }
     }
-}
-
-/**
- * Usage
- */
-{
-    $postage = AirmailDestination::AFRICA()->postage(Airmail::fromGrams(48))
-            ->add(AirmailDestination::ASIA()->postage(Airmail::fromGrams(24)))
-            ->add(AirmailDestination::EUROPE()->postage(Airmail::fromGrams(32)));
-
-    assert($postage->rates() === 510);
 }
