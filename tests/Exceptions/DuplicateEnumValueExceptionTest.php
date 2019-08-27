@@ -6,7 +6,7 @@
  * Time: 16:59
  */
 
-namespace Unit\Exceptions;
+namespace Tests\Exceptions;
 
 
 use Gachakra\PhpEnum\Enum;

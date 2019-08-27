@@ -11,9 +11,10 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
         "fzaninotto/faker": "^1.8",
-        "mockery/mockery": "^1.2"
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^8.0",
+        "psy/psysh": "^0.9.9"
     },
     "config": {
         "optimize-autoloader": true,
@@ -21,7 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Gachakra\\PhpEnum\\": "src/"
+            "Gachakra\\PhpEnum\\": "src/",
+            "Gachakra\\Tests\\": "tests/"
         }
     },
     "autoload-dev": {
