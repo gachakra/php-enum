@@ -13,9 +13,9 @@ namespace Gachakra\PhpEnum;
 use BadMethodCallException;
 use DomainException;
 use Gachakra\PhpEnum\Exceptions\DuplicateEnumValueException;
+use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\MultipleEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\RootEnumMethodCallException;
-use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -258,7 +258,7 @@ abstract class Enum {
     private static function checkIfValueIsScalar($value): void {
         if (!(is_null($value) || is_scalar($value))) {
             $type = gettype($value);
-            throw new InvalidArgumentException("Enum value must be scalar, but $type given");
+            throw new UnsupportedEnumValueTypeException("Enum value must be scalar, but $type given");
         }
     }
 
