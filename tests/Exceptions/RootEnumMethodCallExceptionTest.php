@@ -20,11 +20,11 @@ class RootEnumMethodCallExceptionTest extends TestCase {
 
     /**
      * @test
-     * @dataProvider provideEnumStaticMethodNames
+     * @dataProvider provideEnumPublicStaticMethods
      *
      * @param callable $publicStaticMethod
      */
-    public function thrown_if_called_static_method_via_abstract_enum_directly(callable $publicStaticMethod) {
+    public function thrown_if_called_public_static_method_via_abstract_enum_directly(callable $publicStaticMethod) {
 
         $this->expectException(RootEnumMethodCallException::class);
         $this->expectExceptionMessage(self::EXCEPTION_MESSAGE);
@@ -32,7 +32,7 @@ class RootEnumMethodCallExceptionTest extends TestCase {
         $publicStaticMethod();
     }
 
-    public function provideEnumStaticMethodNames(): Generator {
+    public function provideEnumPublicStaticMethods(): Generator {
 
         yield [function () {
             Enum::elements();
