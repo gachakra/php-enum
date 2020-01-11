@@ -37,13 +37,13 @@ final class Continent extends Enum {
     private const AUSTRALIA = 'Australia';
 
     private static $populations = [
-            self::AFRICA => 1287920000,
-            self::ASIA => 4545133000,
-            self::EUROPE => 742648000,
+            self::AFRICA        => 1287920000,
+            self::ASIA          => 4545133000,
+            self::EUROPE        => 742648000,
             self::NORTH_AMERICA => 587615000,
             self::SOUTH_AMERICA => 428240000,
-            self::ANTARCTICA => 4490,
-            self::AUSTRALIA => 41261000,
+            self::ANTARCTICA    => 4490,
+            self::AUSTRALIA     => 41261000,
     ];
 
     public function population(): int {
