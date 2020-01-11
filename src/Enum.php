@@ -13,9 +13,9 @@ namespace Gachakra\PhpEnum;
 use BadMethodCallException;
 use DomainException;
 use Gachakra\PhpEnum\Exceptions\DuplicateEnumValueException;
-use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\MultipleEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\RootEnumMethodCallException;
+use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -62,6 +62,10 @@ abstract class Enum {
      * @var bool[]|float[]|int[]|string[]
      */
     private static $values = [];
+    /**
+     * @var string[]
+     */
+    private static $strings = [];
 
     /**
      * @var string
@@ -217,6 +221,24 @@ abstract class Enum {
 
         return self::$values[$enum = static::class]
                 ?? self::$values[$enum] = array_values(static::constants());
+    }
+
+    /**
+     * [const1_name => const1_toString_value, const2_name => const2_toString_value...]
+     * @return string[]
+     */
+    public final static function toStrings(): array {
+        self::checkIfCalledNotViaRootEnum();
+
+        if (!empty(self::$strings[$enum = static::class])) {
+            return self::$strings[$enum];
+        }
+
+        $strings = [];
+        foreach (static::constants() as $name => $instance) {
+            $strings[$name] = "$instance";
+        }
+        return self::$strings[$enum] = $strings;
     }
 
     /**

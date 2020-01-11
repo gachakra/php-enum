@@ -90,4 +90,14 @@ final class Continent extends Enum {
             ]);
 
     assert(Continent::values() === [1, 2, 3, 4, 5, 6, 7]);
+
+    assert(Continent::toStrings() === [
+                    'AFRICA'        => '1',
+                    'ASIA'          => '2',
+                    'EUROPE'        => '3',
+                    'NORTH_AMERICA' => '4',
+                    'SOUTH_AMERICA' => '5',
+                    'ANTARCTICA'    => '6',
+                    'AUSTRALIA'     => '7',
+            ]);
 }
