@@ -195,9 +195,7 @@ abstract class Enum {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
-        self::checkIfAllValuesSameType($constants);
-        self::checkIfValuesNotDuplicated($constants);
-
+        self::checkIfConstantValuesValid($constants);
         return self::$constants[$enum] = $constants;
     }
 
@@ -254,8 +252,6 @@ abstract class Enum {
      * @return string
      */
     private static function nameByValue($value): string {
-        self::checkIfValueIsScalar($value);
-
         $name = array_search($value, static::constants(), true);
         if ($name === false) {
             $enum = static::class;
@@ -265,7 +261,7 @@ abstract class Enum {
     }
 
     /**
-     * check callee class to avoid public static methods called directly by this class
+     * check callee class to avoid public static methods called directly from this class
      * like Enum::__callStatic(), Enum::values() or so
      */
     private static function checkIfCalledNotViaRootEnum(): void {
@@ -275,46 +271,37 @@ abstract class Enum {
     }
 
     /**
-     * @param bool|float|int|string|null $value
-     */
-    private static function checkIfValueIsScalar($value): void {
-        if (!(is_null($value) || is_scalar($value))) {
-            $type = gettype($value);
-            throw new UnsupportedEnumValueTypeException("Enum value must be scalar, but $type given");
-        }
-    }
-
-    /**
-     * @param bool[]|float[]|int[]|string[] $constants
-     */
-    private static function checkIfValuesNotDuplicated(array $constants): void {
-        $uniqueValues = [];
-        foreach ($constants as $name => $value) {
-            if (in_array($value, $uniqueValues, true)) {
-                throw new DuplicateEnumValueException("Each Enum constant must have a different value");
-            }
-            $uniqueValues[$name] = $value;
-        }
-    }
-
-    /**
-     * null type allowed
+     * check all values of an enum are
+     * - scalar or null
+     * - the same type except null
+     * - unique
      *
      * @param bool[]|float[]|int[]|string[] $constants
      */
-    private static function checkIfAllValuesSameType(array $constants): void {
+    private static function checkIfConstantValuesValid(array $constants): void {
+        $uniqueValues = [];
         $previousType = null;
         foreach ($constants as $value) {
-            if (is_null($value)) {
-                continue;
+            if (in_array($value, $uniqueValues, true)) {
+                throw new DuplicateEnumValueException("Each Enum constant must have a different value");
             }
-            $currentType = gettype($value);
-            if (is_null($previousType) || $currentType === $previousType) {
-                $previousType = $currentType;
+
+            if (is_null($value)) {
+                $uniqueValues[] = $value;
                 continue;
             }
 
-            throw new MultipleEnumValueTypeException("All the Enum constants values must be the same type");
+            $currentType = gettype($value);
+            if (!is_scalar($value)) {
+                throw new UnsupportedEnumValueTypeException("Enum value must be scalar or null, but $currentType given");
+            }
+
+            if ($currentType !== $previousType && !is_null($previousType)) {
+                throw new MultipleEnumValueTypeException("All the Enum constants values must be the same type");
+            }
+
+            $uniqueValues[] = $value;
+            $previousType = $currentType;
         }
     }
 }
