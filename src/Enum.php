@@ -231,7 +231,6 @@ abstract class Enum {
         if (!empty(self::$strings[$enum = static::class])) {
             return self::$strings[$enum];
         }
-
         $strings = [];
         foreach (static::constants() as $name => $instance) {
             $strings[$name] = "$instance";
