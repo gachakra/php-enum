@@ -16,10 +16,4 @@ use LogicException;
 
 class UnsupportedEnumValueTypeException extends LogicException {
 
-    /**
-     * NotScalarEnumValueException constructor.
-     * @param string $string
-     */
-    public function __construct(string $string) {
-    }
 }
