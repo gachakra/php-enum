@@ -79,14 +79,17 @@ class RootEnumMethodCallExceptionTest extends TestCase {
     }
 
     /**
-     * generate array of public-static-method name and its arguments like below
+     * generate array of [public-static-method name, [its arguments]] like below
      * - ['of', ['NON_EXISTING_NAME']]
      * - ['fromValue', ['NON_EXISTING_VALUE']]
-     * @see Enum::of
-     * @see Enum::fromValue
+     * - ['__callStatic', ['NON_EXISTING_NAME', ['whatever']]]
      *
      * @return Generator
      * @throws ReflectionException
+     *
+     * @see Enum::of
+     * @see Enum::fromValue
+     * @see Enum::__callStatic
      */
     public function provideRootEnumPublicStaticMethods(): Generator {
 
@@ -104,8 +107,9 @@ class RootEnumMethodCallExceptionTest extends TestCase {
 
         $args = [];
         foreach ($method->getParameters() as $parameter) {
-            $typeHint = !is_null($typeHint = $parameter->getType())
-                    ? $typeHint->getName()
+
+            $typeHint = $parameter->getType()
+                    ? $parameter->getType()->getName()
                     : '';
 
             if ($typeHint === '') {
