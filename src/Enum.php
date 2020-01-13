@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace Gachakra\PhpEnum;
 
 use BadMethodCallException;
-use DomainException;
 use Gachakra\PhpEnum\Exceptions\DuplicateEnumValueException;
+use Gachakra\PhpEnum\Exceptions\EnumDomainException;
 use Gachakra\PhpEnum\Exceptions\MultipleEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\RootEnumMethodCallException;
 use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
@@ -47,23 +47,23 @@ use RuntimeException;
 abstract class Enum {
 
     /**
-     * @var static[]
+     * @var string[] => static[]
      */
     private static $elements = [];
     /**
-     * @var bool[]|float[]|int[]|string[]
+     * @var string[] => bool[]|float[]|int[]|string[]
      */
     private static $constants = [];
     /**
-     * @var string[]
+     * @var string[] => string[]
      */
     private static $names = [];
     /**
-     * @var bool[]|float[]|int[]|string[]
+     * @var string[] => bool[]|float[]|int[]|string[]
      */
     private static $values = [];
     /**
-     * @var string[]
+     * @var string[] => string[]
      */
     private static $strings = [];
 
@@ -81,19 +81,14 @@ abstract class Enum {
      * @param        $args
      * @return static
      */
-    public final static function __callStatic($name, array $args): self {
+    public final static function __callStatic(string $name, array $args): self {
         self::checkIfCalledNotViaRootEnum();
 
         if (!empty($args)) {
             throw new BadMethodCallException("No arguments required for Enum, but given");
         }
 
-        if (!static::has($name)) {
-            $enum = static::class;
-            throw new DomainException("Unknown Enum name: $enum::$name");
-        }
-
-        return static::elements()[$name];
+        return static::of($name);
     }
 
     /**
@@ -142,12 +137,8 @@ abstract class Enum {
     public final static function of(string $name): self {
         self::checkIfCalledNotViaRootEnum();
 
-        if (static::has($name)) {
-            return static::elements()[$name];
-        }
-
-        $enum = static::class;
-        throw new DomainException("Unknown Enum name: $enum::$name");
+        return static::elements()[$name]
+                ?? self::throwAgainstUnknownName($name);
     }
 
     /**
@@ -243,6 +234,8 @@ abstract class Enum {
      * @return bool
      */
     public final static function has(string $name): bool {
+        self::checkIfCalledNotViaRootEnum();
+
         return array_key_exists($name, static::constants());
     }
 
@@ -254,7 +247,7 @@ abstract class Enum {
         $name = array_search($value, static::constants(), true);
         if ($name === false) {
             $enum = static::class;
-            throw new DomainException("Unknown Enum value in $enum: $value");
+            throw new EnumDomainException("Unknown Enum value in $enum: [$value]");
         }
         return $name;
     }
@@ -302,6 +295,11 @@ abstract class Enum {
             $uniqueValues[] = $value;
             $previousType = $currentType;
         }
+    }
+
+    private static function throwAgainstUnknownName(string $name): void {
+        $enum = static::class;
+        throw new EnumDomainException("Unknown Enum name: [$enum::$name]");
     }
 }
 
