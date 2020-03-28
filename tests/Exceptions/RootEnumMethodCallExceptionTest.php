@@ -24,18 +24,22 @@ class RootEnumMethodCallExceptionTest extends TestCase {
     private const NON_EXISTING_ENUM_NAME = 'NON_EXISTING_NAME';
     private const NON_EXISTING_ENUM_VALUE = 'NON_EXISTING_VALUE';
 
+    /**
+     * @see Enum::$constants
+     * @throws ReflectionException
+     */
     protected function setUp(): void {
         parent::setUp();
 
         $this->expectException(RootEnumMethodCallException::class);
         $this->expectExceptionMessage(self::EXCEPTION_MESSAGE);
 
-        // force to set Root Enum name-value set to inner static cache
+        // force to set Root Enum name-value set to inner static cache of constants
         {
             $reflectedRootEnum = (new ReflectionClass(Enum::class));
-            $reflectedProperty = $reflectedRootEnum->getProperty('constants');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue([
+            $reflectedConstantsCache = $reflectedRootEnum->getProperty('constants');
+            $reflectedConstantsCache->setAccessible(true);
+            $reflectedConstantsCache->setValue([
                     Enum::class => [self::NON_EXISTING_ENUM_NAME => self::NON_EXISTING_ENUM_VALUE]
             ]);
         }
