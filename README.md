@@ -25,8 +25,6 @@ PrivateEnumChild::ELEMENT1(); // Instantiate an enum element using internal cach
 ```
 #### Public way
 ```php
-// If you would like to instantiate it in this way.
-
 /**
  * @method static self ELEMENT1
  * @method static self ELEMENT2
