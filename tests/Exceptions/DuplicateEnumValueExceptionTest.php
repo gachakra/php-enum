@@ -53,6 +53,9 @@ class DuplicateEnumValueExceptionTest extends TestCase {
         yield [DuplicatedBool::class, DuplicatedBool::DUPLICATED_VALUE1];
         yield [DuplicatedBool::class, DuplicatedBool::DUPLICATED_VALUE2];
         yield [DuplicatedBool::class, DuplicatedBool::NON_DUPLICATED_VALUE];
+
+        yield [DuplicatedNull::class, DuplicatedNull::DUPLICATED_VALUE1];
+        yield [DuplicatedNull::class, DuplicatedNull::DUPLICATED_VALUE2];
     }
 }
 
@@ -102,4 +105,14 @@ class DuplicatedBool extends Enum {
     public const DUPLICATED_VALUE1 = false;
     public const DUPLICATED_VALUE2 = false;
     public const NON_DUPLICATED_VALUE = true;
+}
+
+/**
+ * @method static static DUPLICATED_VALUE1()
+ * @method static static DUPLICATED_VALUE2()
+ */
+class DuplicatedNull extends Enum {
+
+    public const DUPLICATED_VALUE1 = null;
+    public const DUPLICATED_VALUE2 = null;
 }
