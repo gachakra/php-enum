@@ -5,6 +5,8 @@ inspired from this article https://qiita.com/Hiraku/items/71e385b56dcaa37629fe (
 ## Quick start to run examples
 ```bash
 docker-compose up -d --build
+docker exec -it php-enum_php bash
+php examples/BasicMethods/Continent.php // or another example php file
 ```
 
 ## Usage
