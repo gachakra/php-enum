@@ -219,11 +219,11 @@ abstract class Enum {
     public final static function valueToElement(): array {
         self::throwIfCalledViaRootEnum();
 
-        $valueToElements = [];
+        $valueToElement = [];
         foreach (static::elements() as $element) {
-            $valueToElements[$element->value()] = $element;
+            $valueToElement[$element->value()] = $element;
         }
-        return $valueToElements;
+        return $valueToElement;
     }
 
     /**
