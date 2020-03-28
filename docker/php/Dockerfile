@@ -13,7 +13,7 @@ RUN rm /etc/localtime \
 
 # Libraries
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev libzip-dev mysql-client vim git sudo unzip
+    && apt-get install -y zlib1g-dev libzip-dev mariadb-client vim git sudo unzip
 
 
 # PHP

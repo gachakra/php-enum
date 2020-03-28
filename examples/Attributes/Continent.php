@@ -28,22 +28,22 @@ use Gachakra\PhpEnum\Enum;
  */
 final class Continent extends Enum {
 
-    private const AFRICA = 'Africa';
-    private const ASIA = 'Asia';
-    private const EUROPE = 'Europe';
+    private const AFRICA        = 'Africa';
+    private const ASIA          = 'Asia';
+    private const EUROPE        = 'Europe';
     private const NORTH_AMERICA = 'North America';
     private const SOUTH_AMERICA = 'South America';
-    private const ANTARCTICA = 'Antarctica';
-    private const AUSTRALIA = 'Australia';
+    private const ANTARCTICA    = 'Antarctica';
+    private const AUSTRALIA     = 'Australia';
 
     private static $populations = [
-            self::AFRICA => 1287920000,
-            self::ASIA => 4545133000,
-            self::EUROPE => 742648000,
+            self::AFRICA        => 1287920000,
+            self::ASIA          => 4545133000,
+            self::EUROPE        => 742648000,
             self::NORTH_AMERICA => 587615000,
             self::SOUTH_AMERICA => 428240000,
-            self::ANTARCTICA => 4490,
-            self::AUSTRALIA => 41261000,
+            self::ANTARCTICA    => 4490,
+            self::AUSTRALIA     => 41261000,
     ];
 
     public function population(): int {
@@ -81,7 +81,7 @@ final class Continent extends Enum {
  */
 final class ArraySort extends Enum {
 
-    private const ASC = 'asc';
+    private const ASC  = 'asc';
     private const DESC = 'desc';
 
     public static function byValue(array $array, ?self $sort = null): array {
