@@ -66,8 +66,8 @@ class DuplicateEnumValueExceptionTest extends TestCase {
  */
 class DuplicatedString extends Enum {
 
-    public const DUPLICATED_VALUE1 = 'duplicates';
-    public const DUPLICATED_VALUE2 = 'duplicates';
+    public const DUPLICATED_VALUE1    = 'duplicates';
+    public const DUPLICATED_VALUE2    = 'duplicates';
     public const NON_DUPLICATED_VALUE = 'non-duplicates';
 }
 
@@ -78,8 +78,8 @@ class DuplicatedString extends Enum {
  */
 class DuplicatedInteger extends Enum {
 
-    public const DUPLICATED_VALUE1 = 0;
-    public const DUPLICATED_VALUE2 = 0;
+    public const DUPLICATED_VALUE1    = 0;
+    public const DUPLICATED_VALUE2    = 0;
     public const NON_DUPLICATED_VALUE = 1;
 }
 
@@ -90,8 +90,8 @@ class DuplicatedInteger extends Enum {
  */
 class DuplicatedFloat extends Enum {
 
-    public const DUPLICATED_VALUE1 = 0.0;
-    public const DUPLICATED_VALUE2 = 0.0;
+    public const DUPLICATED_VALUE1    = 0.0;
+    public const DUPLICATED_VALUE2    = 0.0;
     public const NON_DUPLICATED_VALUE = 1.0;
 }
 
@@ -102,8 +102,8 @@ class DuplicatedFloat extends Enum {
  */
 class DuplicatedBool extends Enum {
 
-    public const DUPLICATED_VALUE1 = false;
-    public const DUPLICATED_VALUE2 = false;
+    public const DUPLICATED_VALUE1    = false;
+    public const DUPLICATED_VALUE2    = false;
     public const NON_DUPLICATED_VALUE = true;
 }
 

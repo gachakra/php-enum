@@ -99,7 +99,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
      */
     class StringAndNullAtFirst extends Enum {
 
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE1 = '0';
         public const VALUE2 = '1';
     }
@@ -112,7 +112,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
     class StringAndNullInMiddle extends Enum {
 
         public const VALUE1 = '0';
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE2 = '1';
     }
 
@@ -125,7 +125,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
 
         public const VALUE1 = '0';
         public const VALUE2 = '1';
-        public const NULL = null;
+        public const NULL   = null;
     }
 }
 
@@ -137,7 +137,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
      */
     class IntegerAndNullAtFirst extends Enum {
 
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE1 = 0;
         public const VALUE2 = 1;
     }
@@ -150,7 +150,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
     class IntegerAndNullInMiddle extends Enum {
 
         public const VALUE1 = 0;
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE2 = 1;
     }
 
@@ -163,7 +163,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
 
         public const VALUE1 = 0;
         public const VALUE2 = 1;
-        public const NULL = null;
+        public const NULL   = null;
     }
 }
 
@@ -175,7 +175,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
      */
     class FloatAndNullAtFirst extends Enum {
 
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE1 = 0.0;
         public const VALUE2 = 1.0;
     }
@@ -188,7 +188,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
     class FloatAndNullInMiddle extends Enum {
 
         public const VALUE1 = 0.0;
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE2 = 1.0;
     }
 
@@ -201,7 +201,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
 
         public const VALUE1 = 0.0;
         public const VALUE2 = 1.0;
-        public const NULL = null;
+        public const NULL   = null;
     }
 }
 
@@ -213,7 +213,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
      */
     class BoolAndNullAtFirst extends Enum {
 
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE1 = false;
         public const VALUE2 = true;
     }
@@ -226,7 +226,7 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
     class BoolAndNullInMiddle extends Enum {
 
         public const VALUE1 = false;
-        public const NULL = null;
+        public const NULL   = null;
         public const VALUE2 = true;
     }
 
@@ -239,6 +239,6 @@ class MultipleEnumValueTypeExceptionNotThrownTest extends TestCase {
 
         public const VALUE1 = false;
         public const VALUE2 = true;
-        public const NULL = null;
+        public const NULL   = null;
     }
 }

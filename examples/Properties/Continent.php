@@ -27,13 +27,13 @@ use Gachakra\PhpEnum\Enum;
  */
 final class Continent extends Enum {
 
-    private const AFRICA = 1;
-    private const ASIA = 2;
-    private const EUROPE = 3;
+    private const AFRICA        = 1;
+    private const ASIA          = 2;
+    private const EUROPE        = 3;
     private const NORTH_AMERICA = 4;
     private const SOUTH_AMERICA = 5;
-    private const ANTARCTICA = 6;
-    private const AUSTRALIA = 7;
+    private const ANTARCTICA    = 6;
+    private const AUSTRALIA     = 7;
 
     /**
      * @var string
