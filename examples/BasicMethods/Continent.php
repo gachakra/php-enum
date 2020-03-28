@@ -52,8 +52,10 @@ final class Continent extends Enum {
 {
     assert(Continent::of('AFRICA')->equals(Continent::AFRICA()));
     assert(Continent::fromValue(1)->equals(Continent::AFRICA()));
-}
 
+    assert(Continent::elements()['AFRICA']->equals(Continent::AFRICA()));
+    assert(Continent::valueToElement()[1]->equals(Continent::AFRICA()));
+}
 
 /**
  * class methods for array
