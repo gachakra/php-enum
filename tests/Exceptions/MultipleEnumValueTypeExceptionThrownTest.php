@@ -88,7 +88,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class StringAndInteger extends Enum {
 
-        public const STRING = '0';
+        public const STRING  = '0';
         public const INTEGER = 0;
     }
 
@@ -99,7 +99,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class StringAndFloat extends Enum {
 
         public const STRING = '0';
-        public const FLOAT = 0.0;
+        public const FLOAT  = 0.0;
     }
 
     /**
@@ -109,7 +109,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class StringAndBool extends Enum {
 
         public const STRING = '0';
-        public const BOOL = false;
+        public const BOOL   = false;
     }
 
     /**
@@ -119,7 +119,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class IntegerAndFloat extends Enum {
 
         public const INTEGER = 0;
-        public const FLOAT = 0.0;
+        public const FLOAT   = 0.0;
     }
 
     /**
@@ -129,7 +129,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class IntegerAndBool extends Enum {
 
         public const INTEGER = 0;
-        public const BOOL = false;
+        public const BOOL    = false;
     }
 
     /**
@@ -139,7 +139,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class FloatAndBool extends Enum {
 
         public const FLOAT = 0.0;
-        public const BOOL = false;
+        public const BOOL  = false;
     }
 }
 
@@ -153,7 +153,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class BoolAndFloat extends Enum {
 
-        public const BOOL = true;
+        public const BOOL  = true;
         public const FLOAT = 1.0;
     }
 
@@ -163,7 +163,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class BoolAndInteger extends Enum {
 
-        public const BOOL = true;
+        public const BOOL    = true;
         public const INTEGER = 1;
     }
 
@@ -173,7 +173,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class BoolAndString extends Enum {
 
-        public const BOOL = true;
+        public const BOOL   = true;
         public const STRING = '1';
     }
 
@@ -183,7 +183,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class FloatAndInteger extends Enum {
 
-        public const FLOAT = 1.0;
+        public const FLOAT   = 1.0;
         public const INTEGER = 1;
     }
 
@@ -193,7 +193,7 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
      */
     class FloatAndString extends Enum {
 
-        public const FLOAT = 1.0;
+        public const FLOAT  = 1.0;
         public const STRING = '1';
     }
 
@@ -204,6 +204,6 @@ class MultipleEnumValueTypeExceptionThrownTest extends TestCase {
     class IntegerAndString extends Enum {
 
         public const INTEGER = 1;
-        public const STRING = '1';
+        public const STRING  = '1';
     }
 }

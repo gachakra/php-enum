@@ -213,6 +213,20 @@ abstract class Enum {
     }
 
     /**
+     * [const1_value => enum_instance_of_const1, const2_value => enum_instance_of_const2...]
+     * @return static[]
+     */
+    public final static function valueToElement(): array {
+        self::throwIfCalledViaRootEnum();
+
+        $valueToElement = [];
+        foreach (static::elements() as $element) {
+            $valueToElement[$element->value()] = $element;
+        }
+        return $valueToElement;
+    }
+
+    /**
      * [const1_name => const1_toString_value, const2_name => const2_toString_value...]
      * @return string[]
      */

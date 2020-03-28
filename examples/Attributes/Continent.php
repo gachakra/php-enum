@@ -28,13 +28,13 @@ use Gachakra\PhpEnum\Enum;
  */
 final class Continent extends Enum {
 
-    private const AFRICA        = 'Africa';
-    private const ASIA          = 'Asia';
-    private const EUROPE        = 'Europe';
-    private const NORTH_AMERICA = 'North America';
-    private const SOUTH_AMERICA = 'South America';
-    private const ANTARCTICA    = 'Antarctica';
-    private const AUSTRALIA     = 'Australia';
+    public const AFRICA        = 'Africa';
+    public const ASIA          = 'Asia';
+    public const EUROPE        = 'Europe';
+    public const NORTH_AMERICA = 'North America';
+    public const SOUTH_AMERICA = 'South America';
+    public const ANTARCTICA    = 'Antarctica';
+    public const AUSTRALIA     = 'Australia';
 
     private static $populations = [
             self::AFRICA        => 1287920000,
@@ -62,14 +62,18 @@ final class Continent extends Enum {
     }
 
     /**
-     * @param ArraySort $order
+     * @param ArraySort $sort
      * @return self[]
      */
-    public static function sortByPopulation(?ArraySort $order = null): array {
+    public static function sortByPopulation(?ArraySort $sort = null): array {
 
         return array_map(function (string $continentValue) {
             return self::fromValue($continentValue);
-        }, array_keys(ArraySort::byValue(self::$populations, $order)));
+        }, array_keys(($sort ?? ArraySort::ASC())->byValue(self::$populations)));
+    }
+
+    public static function sortByName(?ArraySort $sort = null): array {
+        return ($sort ?? ArraySort::ASC())->byKey(self::valueToElement());
     }
 }
 
@@ -84,12 +88,28 @@ final class ArraySort extends Enum {
     private const ASC  = 'asc';
     private const DESC = 'desc';
 
-    public static function byValue(array $array, ?self $sort = null): array {
+    public static function byValueOrder(array $array, ?self $sort = null): array {
 
         ($sort ?? self::ASC())->equals(self::ASC())
                 ? asort($array)
                 : arsort($array);
         return $array;
+    }
+
+    public static function byKeyOrder(array $array, ?self $sort = null): array {
+
+        ($sort ?? self::ASC())->equals(self::ASC())
+                ? ksort($array)
+                : krsort($array);
+        return $array;
+    }
+
+    public function byValue(array $array): array {
+        return self::byValueOrder($array, $this);
+    }
+
+    public function byKey(array $array): array {
+        return self::byKeyOrder($array, $this);
     }
 }
 
@@ -127,13 +147,34 @@ final class ArraySort extends Enum {
                     Continent::AUSTRALIA(),
                     Continent::ANTARCTICA()
             ]);
+
+    assert(Continent::sortByName() == [
+                    Continent::AFRICA        => Continent::AFRICA(),
+                    Continent::ANTARCTICA    => Continent::ANTARCTICA(),
+                    Continent::ASIA          => Continent::ASIA(),
+                    Continent::AUSTRALIA     => Continent::AUSTRALIA(),
+                    Continent::EUROPE        => Continent::EUROPE(),
+                    Continent::NORTH_AMERICA => Continent::NORTH_AMERICA(),
+                    Continent::SOUTH_AMERICA => Continent::SOUTH_AMERICA(),
+            ]);
+
+
+    assert(Continent::sortByName(ArraySort::DESC()) === [
+                    Continent::SOUTH_AMERICA => Continent::SOUTH_AMERICA(),
+                    Continent::NORTH_AMERICA => Continent::NORTH_AMERICA(),
+                    Continent::EUROPE        => Continent::EUROPE(),
+                    Continent::AUSTRALIA     => Continent::AUSTRALIA(),
+                    Continent::ASIA          => Continent::ASIA(),
+                    Continent::ANTARCTICA    => Continent::ANTARCTICA(),
+                    Continent::AFRICA        => Continent::AFRICA()
+            ]);
 }
 
 /**
  * print
  */
 {
-    echo "\nPopulations of the Continents\n";
+    echo "\nPopulations of the Continents (descending order)\n";
     foreach (Continent::sortByPopulation(ArraySort::DESC()) as $continent) {
         echo "    $continent: {$continent->formattedPopulation()}\n";
     }

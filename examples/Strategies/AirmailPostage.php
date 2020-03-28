@@ -14,18 +14,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 use DomainException;
 use Gachakra\PhpEnum\Enum;
-
-
-/**
- * Usage
- */
-{
-    $postage = AirmailDestination::AFRICA()->postage(Airmail::fromGrams(48))
-            ->add(AirmailDestination::ASIA()->postage(Airmail::fromGrams(24)))
-            ->add(AirmailDestination::EUROPE()->postage(Airmail::fromGrams(32)));
-
-    assert($postage->rates() === 510);
-}
+use OutOfRangeException;
 
 
 /**
@@ -73,13 +62,13 @@ interface Postage {
  */
 final class AirmailDestination extends Enum implements Destination {
 
-    private const AFRICA = 'Africa';
-    private const ASIA = 'Asia';
-    private const EUROPE = 'Europe';
+    private const AFRICA        = 'Africa';
+    private const ASIA          = 'Asia';
+    private const EUROPE        = 'Europe';
     private const NORTH_AMERICA = 'North America';
     private const SOUTH_AMERICA = 'South America';
-    private const ANTARCTICA = 'Antarctica';
-    private const AUSTRALIA = 'Australia';
+    private const ANTARCTICA    = 'Antarctica';
+    private const AUSTRALIA     = 'Australia';
 
     /**
      * or you can use dispatch table instead of switch
@@ -124,7 +113,7 @@ final class AirmailWeightType extends Enum implements WeightType {
         if ($grams <= self::UP_TO_50_GRAMS) {
             return self::UP_TO_50_GRAMS();
         }
-        throw new \OutOfRangeException();
+        throw new OutOfRangeException();
     }
 }
 
@@ -164,7 +153,7 @@ class AirmailPostage implements Postage {
 
     protected function __construct(int $jpy) {
         if ($jpy < 0) {
-            throw new \OutOfRangeException(); // TODO message
+            throw new OutOfRangeException(); // TODO message
         }
         $this->jpy = $jpy;
     }
@@ -240,4 +229,16 @@ class HighestAirmailPostage extends AirmailPostage {
                 throw new DomainException();
         }
     }
+}
+
+
+/**
+ * Usage
+ */
+{
+    $postage = AirmailDestination::AFRICA()->postage(Airmail::fromGrams(48))
+            ->add(AirmailDestination::ASIA()->postage(Airmail::fromGrams(24)))
+            ->add(AirmailDestination::EUROPE()->postage(Airmail::fromGrams(32)));
+
+    assert($postage->rates() === 510);
 }
