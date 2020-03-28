@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace Gachakra\PhpEnum;
 
 use BadMethodCallException;
-use DomainException;
 use Gachakra\PhpEnum\Exceptions\DuplicateEnumValueException;
-use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
+use Gachakra\PhpEnum\Exceptions\EnumDomainException;
 use Gachakra\PhpEnum\Exceptions\MultipleEnumValueTypeException;
 use Gachakra\PhpEnum\Exceptions\RootEnumMethodCallException;
+use Gachakra\PhpEnum\Exceptions\UnsupportedEnumValueTypeException;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -24,11 +24,11 @@ use RuntimeException;
  * DEFINITION
  * - element  : Enum instance
  * - constant : const itself
- * - name     : const name
+ * - name     : const name (equally, Enum instance name)
  * - value    : const value
  *
  * CONTRACT
- * - only `scalar` and `null` value allowed as Enum subclass const value (`array` not allowed)
+ * - only `scalar` and `null` value allowed as Enum subclass const value (`array` not allowed so far)
  * - duplicated consts' values are not allowed in an Enum
  * - all the consts' values must be the same type
  *
@@ -47,21 +47,25 @@ use RuntimeException;
 abstract class Enum {
 
     /**
-     * @var static[]
+     * @var string[] => static[]
      */
     private static $elements = [];
     /**
-     * @var bool[]|float[]|int[]|string[]
+     * @var string[] => bool[]|float[]|int[]|string[]
      */
     private static $constants = [];
     /**
-     * @var string[]
+     * @var string[] => string[]
      */
     private static $names = [];
     /**
-     * @var bool[]|float[]|int[]|string[]
+     * @var string[] => bool[]|float[]|int[]|string[]
      */
     private static $values = [];
+    /**
+     * @var string[] => string[]
+     */
+    private static $strings = [];
 
     /**
      * @var string
@@ -77,19 +81,14 @@ abstract class Enum {
      * @param        $args
      * @return static
      */
-    public final static function __callStatic($name, array $args): self {
-        self::checkIfCalledNotViaRootEnum();
+    public final static function __callStatic(string $name, array $args): self {
+        self::throwIfCalledViaRootEnum();
 
         if (!empty($args)) {
             throw new BadMethodCallException("No arguments required for Enum, but given");
         }
 
-        if (!static::has($name)) {
-            $enum = static::class;
-            throw new DomainException("Unknown Enum name: $enum::$name");
-        }
-
-        return static::elements()[$name];
+        return static::of($name);
     }
 
     /**
@@ -136,14 +135,10 @@ abstract class Enum {
      * @return static
      */
     public final static function of(string $name): self {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
-        if (static::has($name)) {
-            return static::elements()[$name];
-        }
-
-        $enum = static::class;
-        throw new DomainException("Unknown Enum name: $enum::$name");
+        return static::elements()[$name]
+                ?? self::throwAgainstUnknownName($name);
     }
 
     /**
@@ -151,7 +146,7 @@ abstract class Enum {
      * @return static
      */
     public final static function fromValue($value): self {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
         return static::of(self::nameByValue($value));
     }
@@ -161,7 +156,7 @@ abstract class Enum {
      * @return static[]
      */
     public final static function elements(): array {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
         if (!empty(self::$elements[$enum = static::class])) {
             return self::$elements[$enum];
@@ -179,7 +174,7 @@ abstract class Enum {
      * @return bool[]|float[]|int[]|string[]
      */
     public final static function constants(): array {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
         if (!empty(self::$constants[$enum = static::class])) {
             return self::$constants[$enum];
@@ -191,9 +186,7 @@ abstract class Enum {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
-        self::checkIfAllValuesSameType($constants);
-        self::checkIfValuesNotDuplicated($constants);
-
+        self::checkConstantValuesValidity($constants);
         return self::$constants[$enum] = $constants;
     }
 
@@ -202,7 +195,7 @@ abstract class Enum {
      * @return string[]
      */
     public final static function names(): array {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
         return self::$names[$enum = static::class]
                 ?? self::$names[$enum] = array_keys(static::constants());
@@ -213,10 +206,21 @@ abstract class Enum {
      * @return bool[]|float[]|int[]|string[]
      */
     public final static function values(): array {
-        self::checkIfCalledNotViaRootEnum();
+        self::throwIfCalledViaRootEnum();
 
         return self::$values[$enum = static::class]
                 ?? self::$values[$enum] = array_values(static::constants());
+    }
+
+    /**
+     * [const1_name => const1_toString_value, const2_name => const2_toString_value...]
+     * @return string[]
+     */
+    public final static function toStrings(): array {
+        self::throwIfCalledViaRootEnum();
+
+        return self::$strings[$enum = static::class]
+                ?? self::$strings[$enum] = array_map('strval', self::constants());
     }
 
     /**
@@ -224,7 +228,19 @@ abstract class Enum {
      * @return bool
      */
     public final static function has(string $name): bool {
+        self::throwIfCalledViaRootEnum();
+
         return array_key_exists($name, static::constants());
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    public final static function hasValue($value): bool {
+        self::throwIfCalledViaRootEnum();
+
+        return in_array($value, static::constants(), true);
     }
 
     /**
@@ -232,68 +248,76 @@ abstract class Enum {
      * @return string
      */
     private static function nameByValue($value): string {
-        self::checkIfValueIsScalar($value);
+        self::throwAgainstUnsupportedValueType($value);
 
         $name = array_search($value, static::constants(), true);
-        if ($name === false) {
-            $enum = static::class;
-            throw new DomainException("Unknown Enum value in $enum: $value");
-        }
+
+        $name === false && self::throwAgainstUnknownValue($value);
+
         return $name;
     }
 
     /**
-     * check callee class to avoid public static methods called directly by this class
+     * check all values of an enum are
+     * - scalar or null
+     * - the same type except null
+     * - unique
+     *
+     * @param bool[]|float[]|int[]|string[] $constants
+     */
+    private static function checkConstantValuesValidity(array $constants): void {
+        $uniqueValues = [];
+        $previousType = null;
+        foreach ($constants as $value) {
+            if (in_array($value, $uniqueValues, true)) {
+                throw new DuplicateEnumValueException("Each Enum constant must have a different value");
+            }
+
+            if (is_null($value)) {
+                $uniqueValues[] = $value;
+                continue;
+            }
+
+            $currentType = gettype($value);
+            if (!is_scalar($value)) {
+                throw new UnsupportedEnumValueTypeException("Enum value must be scalar or null, but $currentType given");
+            }
+
+            if ($currentType !== $previousType && !is_null($previousType)) {
+                throw new MultipleEnumValueTypeException("All the Enum constants values must be the same type");
+            }
+
+            $uniqueValues[] = $value;
+            $previousType = $currentType;
+        }
+    }
+
+    /**
+     * check callee class to avoid public static methods called directly from this class
      * like Enum::__callStatic(), Enum::values() or so
      */
-    private static function checkIfCalledNotViaRootEnum(): void {
+    private static function throwIfCalledViaRootEnum(): void {
         if (static::class === self::class) {
             throw new RootEnumMethodCallException("Cannot call static method directly via root abstract Enum");
         }
     }
 
-    /**
-     * @param bool|float|int|string|null $value
-     */
-    private static function checkIfValueIsScalar($value): void {
-        if (!(is_null($value) || is_scalar($value))) {
-            $type = gettype($value);
-            throw new UnsupportedEnumValueTypeException("Enum value must be scalar, but $type given");
+    private static function throwAgainstUnsupportedValueType($value): void {
+        if (is_scalar($value) || is_null($value)) {
+            return;
         }
+        $type = gettype($value);
+        throw new UnsupportedEnumValueTypeException("Enum value must be scalar or null, but $type given");
     }
 
-    /**
-     * @param bool[]|float[]|int[]|string[] $constants
-     */
-    private static function checkIfValuesNotDuplicated(array $constants): void {
-        $uniqueValues = [];
-        foreach ($constants as $name => $value) {
-            if (in_array($value, $uniqueValues, true)) {
-                throw new DuplicateEnumValueException("Each Enum constant must have a different value");
-            }
-            $uniqueValues[$name] = $value;
-        }
+    private static function throwAgainstUnknownName(string $name): void {
+        $enum = static::class;
+        throw new EnumDomainException("Unknown Enum name: [$enum::$name]");
     }
 
-    /**
-     * null type allowed
-     *
-     * @param bool[]|float[]|int[]|string[] $constants
-     */
-    private static function checkIfAllValuesSameType(array $constants): void {
-        $previousType = null;
-        foreach ($constants as $value) {
-            if (is_null($value)) {
-                continue;
-            }
-            $currentType = gettype($value);
-            if (is_null($previousType) || $currentType === $previousType) {
-                $previousType = $currentType;
-                continue;
-            }
-
-            throw new MultipleEnumValueTypeException("All the Enum constants values must be the same type");
-        }
+    private static function throwAgainstUnknownValue($value): void {
+        $enum = static::class;
+        throw new EnumDomainException("Unknown Enum value in $enum: [$value]");
     }
 }
 

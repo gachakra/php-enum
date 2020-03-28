@@ -27,13 +27,13 @@ use Gachakra\PhpEnum\Enum;
  */
 final class Continent extends Enum {
 
-    private const AFRICA = 1;
-    private const ASIA = 2;
-    private const EUROPE = 3;
+    private const AFRICA        = 1;
+    private const ASIA          = 2;
+    private const EUROPE        = 3;
     private const NORTH_AMERICA = 4;
     private const SOUTH_AMERICA = 5;
-    private const ANTARCTICA = 6;
-    private const AUSTRALIA = 7;
+    private const ANTARCTICA    = 6;
+    private const AUSTRALIA     = 7;
 }
 
 
@@ -60,23 +60,23 @@ final class Continent extends Enum {
  */
 {
     assert(Continent::elements() === [
-                    'AFRICA' => Continent::AFRICA(),
-                    'ASIA' => Continent::ASIA(),
-                    'EUROPE' => Continent::EUROPE(),
+                    'AFRICA'        => Continent::AFRICA(),
+                    'ASIA'          => Continent::ASIA(),
+                    'EUROPE'        => Continent::EUROPE(),
                     'NORTH_AMERICA' => Continent::NORTH_AMERICA(),
                     'SOUTH_AMERICA' => Continent::SOUTH_AMERICA(),
-                    'ANTARCTICA' => Continent::ANTARCTICA(),
-                    'AUSTRALIA' => Continent::AUSTRALIA(),
+                    'ANTARCTICA'    => Continent::ANTARCTICA(),
+                    'AUSTRALIA'     => Continent::AUSTRALIA(),
             ]);
 
     assert(Continent::constants() === [
-                    'AFRICA' => 1,
-                    'ASIA' => 2,
-                    'EUROPE' => 3,
+                    'AFRICA'        => 1,
+                    'ASIA'          => 2,
+                    'EUROPE'        => 3,
                     'NORTH_AMERICA' => 4,
                     'SOUTH_AMERICA' => 5,
-                    'ANTARCTICA' => 6,
-                    'AUSTRALIA' => 7,
+                    'ANTARCTICA'    => 6,
+                    'AUSTRALIA'     => 7,
             ]);
 
     assert(Continent::names() === [
@@ -90,4 +90,14 @@ final class Continent extends Enum {
             ]);
 
     assert(Continent::values() === [1, 2, 3, 4, 5, 6, 7]);
+
+    assert(Continent::toStrings() === [
+                    'AFRICA'        => '1',
+                    'ASIA'          => '2',
+                    'EUROPE'        => '3',
+                    'NORTH_AMERICA' => '4',
+                    'SOUTH_AMERICA' => '5',
+                    'ANTARCTICA'    => '6',
+                    'AUSTRALIA'     => '7',
+            ]);
 }
