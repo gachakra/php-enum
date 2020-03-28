@@ -15,13 +15,12 @@ docker-compose up -d --build
  * @method static self ELEMENT1
  * @method static self ELEMENT2
  */
-class EnumChild extends Enum {
-
-  const ELEMENT1 = 'element1';
-  const ELEMENT2 = 'element2';
+class EnumChild extends Enum
+{
+    const ELEMENT1 = 'element1';
+    const ELEMENT2 = 'element2';
 }
 
 EnumChild::ELEMENT1();
-new EnumChild(EnumChild::ELEMENT2)
+new EnumChild(EnumChild::ELEMENT2);
 ```
-### Class Definition
