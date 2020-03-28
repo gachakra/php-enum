@@ -132,9 +132,9 @@ class UnsupportedEnumValueTypeExceptionTest extends TestCase {
  */
 class ArrayTypeEnum extends Enum {
 
-    public const PUBLIC_ARRAY = [];
+    public const    PUBLIC_ARRAY    = [];
     protected const PROTECTED_ARRAY = [];
-    private const PRIVATE_ARRAY = ['array'];
+    private const   PRIVATE_ARRAY   = ['array'];
 
     const NON_ARRAY = 'non_array';
 }

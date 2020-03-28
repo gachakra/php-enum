@@ -21,12 +21,12 @@ class RootEnumMethodCallExceptionTest extends TestCase {
 
     private const EXCEPTION_MESSAGE = "Cannot call static method directly via root abstract Enum";
 
-    private const NON_EXISTING_ENUM_NAME = 'NON_EXISTING_NAME';
+    private const NON_EXISTING_ENUM_NAME  = 'NON_EXISTING_NAME';
     private const NON_EXISTING_ENUM_VALUE = 'NON_EXISTING_VALUE';
 
     /**
-     * @see Enum::$constants
      * @throws ReflectionException
+     * @see Enum::$constants
      */
     protected function setUp(): void {
         parent::setUp();
