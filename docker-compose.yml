@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   php:
-    container_name: php
+    container_name: php-enum_php
     build:
       context: ./docker/php
       args:
@@ -19,7 +19,7 @@ services:
 
   nginx:
     image: nginx
-    container_name: nginx
+    container_name: php-enum_nginx
     ports:
       - 8080:80
     volumes:
