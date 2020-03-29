@@ -8,13 +8,10 @@
 
 declare(strict_types=1);
 
-namespace Gachakra\PhpEnum\Examples\Strategies;
-
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Gachakra\PhpEnum\Enum;
 use Gachakra\PhpEnum\Exceptions\EnumDomainException;
-use OutOfRangeException;
 
 
 /**

@@ -8,11 +8,8 @@
 
 declare(strict_types=1);
 
-namespace Gachakra\PhpEnum\Examples\Attributes;
-
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use DomainException;
 use Gachakra\PhpEnum\Enum;
 
 /**
