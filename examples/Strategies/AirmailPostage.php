@@ -12,7 +12,6 @@ namespace Gachakra\PhpEnum\Examples\Strategies;
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use DomainException;
 use Gachakra\PhpEnum\Enum;
 use Gachakra\PhpEnum\Exceptions\EnumDomainException;
 use OutOfRangeException;
@@ -209,7 +208,7 @@ class MiddleAirmailPostage extends AirmailPostage {
             case AirmailWeightType::UP_TO_50_GRAMS():
                 return 190;
             default:
-                throw new DomainException();
+                throw new EnumDomainException();
         }
     }
 }
