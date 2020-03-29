@@ -28,14 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Gachakra\\PhpEnum\\": "src/",
-            "Gachakra\\Tests\\": "tests/"
+            "Gachakra\\PhpEnum\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Gachakra\\PhpEnum\\Tests\\": "tests/",
-            "Gachakra\\PhpEnum\\Examples\\": "examples/"
+            "Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
