@@ -1,12 +1,18 @@
 {
     "name": "gachakra/php-enum",
     "type": "vcs",
-    "description": "Enum for PHP 7",
+    "description": "Enum for >= PHP 7.1",
     "keywords": [
         "php",
         "enum"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Kangin Kim",
+            "email": "gachakra.kangin@notonza.dev"
+        }
+    ],
     "require": {
         "php": ">=7.1"
     },
