@@ -14,6 +14,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 use DomainException;
 use Gachakra\PhpEnum\Enum;
+use Gachakra\PhpEnum\Exceptions\EnumDomainException;
 use OutOfRangeException;
 
 
@@ -91,7 +92,7 @@ final class AirmailDestination extends Enum implements Destination {
                 return HighestAirmailPostage::of($mail);
 
             default:
-                throw new DomainException("Airmail unsupported for $this");
+                throw new EnumDomainException("Airmail unsupported for $this");
         }
     }
 }
@@ -190,7 +191,7 @@ class LowestAirmailPostage extends AirmailPostage {
             case AirmailWeightType::UP_TO_50_GRAMS():
                 return 160;
             default:
-                throw new DomainException();
+                throw new EnumDomainException();
         }
     }
 }
@@ -226,7 +227,7 @@ class HighestAirmailPostage extends AirmailPostage {
             case AirmailWeightType::UP_TO_50_GRAMS():
                 return 230;
             default:
-                throw new DomainException();
+                throw new EnumDomainException();
         }
     }
 }
