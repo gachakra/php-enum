@@ -12,7 +12,7 @@ php examples/BasicMethods/Continent.php // or another example php file
 
 ## Usage
 ### Class Definition
-#### Private or protected way
+#### Private or protected constructor way
 ```php
 /**
  * @method static self ELEMENT1
@@ -26,7 +26,7 @@ class PrivateEnumChild extends Enum
 
 PrivateEnumChild::ELEMENT1(); // Instantiate an enum element using internal cache
 ```
-#### Public way
+#### Public constructor way
 ```php
 /**
  * @method static self ELEMENT1
@@ -44,7 +44,7 @@ class PublicEnumChild extends Enum
 }
 
 PublicEnumChild::ELEMENT1(); // Instantiate an enum element using internal cache
-new PublicEnumChild(PublicEnumChild::ELEMENT2); // Create new enum element instance
+new PublicEnumChild(PublicEnumChild::ELEMENT2); // Create new enum element instance not using internal cache
 ```
 
 ### Basic Methods
