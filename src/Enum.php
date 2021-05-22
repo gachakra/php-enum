@@ -213,6 +213,17 @@ abstract class Enum {
     }
 
     /**
+     * [const1_name => const1_toString_value, const2_name => const2_toString_value...]
+     * @return string[]
+     */
+    public final static function toStrings(): array {
+        self::throwIfCalledViaRootEnum();
+
+        return self::$strings[$enum = static::class]
+                ?? self::$strings[$enum] = array_map('strval', self::constants());
+    }
+
+    /**
      * [const1_value => enum_instance_of_const1, const2_value => enum_instance_of_const2...]
      * @return static[]
      */
@@ -227,14 +238,21 @@ abstract class Enum {
     }
 
     /**
-     * [const1_name => const1_toString_value, const2_name => const2_toString_value...]
-     * @return string[]
+     * @return static
      */
-    public final static function toStrings(): array {
+    public final static function random(): self {
         self::throwIfCalledViaRootEnum();
 
-        return self::$strings[$enum = static::class]
-                ?? self::$strings[$enum] = array_map('strval', self::constants());
+        return static::elements()[array_rand(static::elements())];
+    }
+
+    /**
+     * @return int
+     */
+    public final static function count(): int {
+        self::throwIfCalledViaRootEnum();
+
+        return count(static::constants());
     }
 
     /**
