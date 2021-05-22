@@ -21,8 +21,8 @@ class HasTest extends TestCase {
      */
     public function return_true_if_has_name() {
 
-        $this->assertTrue(SimpleEnum::has('ELEMENT1'));
-        $this->assertTrue(SimpleEnum::has('ELEMENT2'));
+        $this->assertTrue(EnumWithPublicConstructor::has('ELEMENT1'));
+        $this->assertTrue(EnumWithPublicConstructor::has('ELEMENT2'));
     }
 
     /**
@@ -31,9 +31,9 @@ class HasTest extends TestCase {
      */
     public function return_false_if_not_have_name() {
 
-        $this->assertFalse(SimpleEnum::has('element1'));
-        $this->assertFalse(SimpleEnum::has('ELEMENT3'));
-        $this->assertFalse(SimpleEnum::has(''));
+        $this->assertFalse(EnumWithPublicConstructor::has('element1'));
+        $this->assertFalse(EnumWithPublicConstructor::has('ELEMENT3'));
+        $this->assertFalse(EnumWithPublicConstructor::has(''));
     }
 
     /**
@@ -42,8 +42,8 @@ class HasTest extends TestCase {
      */
     public function return_true_if_has_value() {
 
-        $this->assertTrue(SimpleEnum::hasValue('element1'));
-        $this->assertTrue(SimpleEnum::hasValue('element2'));
+        $this->assertTrue(EnumWithPublicConstructor::hasValue('element1'));
+        $this->assertTrue(EnumWithPublicConstructor::hasValue('element2'));
     }
 
     /**
@@ -52,13 +52,13 @@ class HasTest extends TestCase {
      */
     public function return_false_if_not_have_value() {
 
-        $this->assertFalse(SimpleEnum::hasValue('ELEMENT1'));
-        $this->assertFalse(SimpleEnum::hasValue('element3'));
-        $this->assertFalse(SimpleEnum::hasValue(''));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue('ELEMENT1'));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue('element3'));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue(''));
 
-        $this->assertFalse(SimpleEnum::hasValue(0));
-        $this->assertFalse(SimpleEnum::hasValue(1));
-        $this->assertFalse(SimpleEnum::hasValue(true));
-        $this->assertFalse(SimpleEnum::hasValue(false));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue(0));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue(1));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue(true));
+        $this->assertFalse(EnumWithPublicConstructor::hasValue(false));
     }
 }
