@@ -25,15 +25,8 @@ ENV PATH $PATH:./vendor/bin
 
 
 # Composer
-RUN curl -sS https://getcomposer.org/installer | php \
-    && sudo mv composer.phar /usr/local/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /composer
-ENV PATH $PATH:/composer/vendor/bin
-
-# change packagist mirror server to JP one and install concurrent installer to accelerate
-RUN composer config -g repos.packagist composer https://packagist.jp \
-    && composer global require hirak/prestissimo
+WORKDIR /root/
+COPY --from=composer:2.0.13 /usr/bin/composer /usr/local/bin/composer
 
 
 # Document Root

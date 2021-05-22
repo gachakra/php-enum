@@ -15,10 +15,4 @@ use DomainException;
 
 class EnumDomainException extends DomainException {
 
-    /**
-     * EnumDomainException constructor.
-     * @param string $string
-     */
-    public function __construct(string $string) {
-    }
 }

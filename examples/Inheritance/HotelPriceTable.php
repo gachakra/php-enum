@@ -8,12 +8,9 @@
 
 declare(strict_types=1);
 
-
-namespace Gachakra\PhpEnum\Examples\Inheritance;
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Gachakra\PhpEnum\Enum;
-
-require_once __DIR__ . "/../../vendor/autoload.php";
 
 /**
  * @method static static SPECIAL_ROOM()

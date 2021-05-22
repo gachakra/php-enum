@@ -8,8 +8,6 @@
 
 declare(strict_types=1);
 
-namespace Gachakra\PhpEnum\Examples\BasicMethods;
-
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Gachakra\PhpEnum\Enum;
